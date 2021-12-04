@@ -1,0 +1,10 @@
+{
+  "name": "Template_R_operator",
+  "description": "Calculate the mathamatical average of the data points in a cell.",
+  "tags": ["basic statistics"],
+  "authors": ["tercen"],
+  "urls": ["https://github.com/tercen/template_R_operator"],
+  "properties": []
+}
+
+

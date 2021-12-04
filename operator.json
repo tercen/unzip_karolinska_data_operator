@@ -1,9 +1,9 @@
 {
-  "name": "Template_R_operator",
-  "description": "Calculate the mathamatical average of the data points in a cell.",
-  "tags": ["basic statistics"],
+  "name": "unzip_karolinska_data_operator",
+  "description": "Unzips folders with the Karolinska's clients folder structure and saves the FastQ information.",
+  "tags": ["operations", "streamlining"],
   "authors": ["tercen"],
-  "urls": ["https://github.com/tercen/template_R_operator"],
+  "urls": ["https://github.com/tercen/unzip_karolinska_data_operator"],
   "properties": []
 }
 

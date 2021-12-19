@@ -4,7 +4,7 @@ library(base64enc)
 library(stringr)
 
 options("tercen.workflowId" = "933d7cdead59b980b3bfeb9f50029d79")
-options("tercen.stepId"     = "b2074bd8-011e-438c-9270-4bd03e0d2faf")
+options("tercen.stepId"     = "1ff93789-7b56-46a9-9d5e-72cae51ab52f")
 
 getOption("tercen.workflowId")
 getOption("tercen.stepId")
@@ -47,29 +47,36 @@ system(paste0("unzip ", filename))
 
 folder_name <- str_remove(filename, ".zip")
   
-sample_folders <- list.dirs(folder_name,
-                            recursive = FALSE,
-                            full.names = FALSE)
+#sample_folders <- list.dirs(folder_name,
+#                            recursive = FALSE,
+#                            full.names = FALSE)
+
+sample_IDs_found <- list.files(folder_name,
+                               pattern = "_L001_R1",
+                               recursive = TRUE,
+                               full.names = TRUE)
 
 output_table <- c()
 
-for (sample_name in sample_folders) {
+for (sample_R1 in sample_IDs_found) {
   
-  sample_R1 <- list.files(paste0(folder_name, "/",
-                                 sample_name),
-                             recursive = TRUE,
-                          pattern = "R1_001",
-                          full.names = TRUE)
-  
-  sample_R2 <- list.files(paste0(folder_name, "/",
-                                 sample_name),
-                          recursive = TRUE,
-                          pattern = "R2_001",
-                          full.names = TRUE)
+  # sample_R1 <- list.files(paste0(folder_name, "/",
+  #                                sample_name),
+  #                            recursive = TRUE,
+  #                         pattern = "R1_001",
+  #                         full.names = TRUE)
+  # 
+  # sample_R2 <- list.files(paste0(folder_name, "/",
+  #                                sample_name),
+  #                         recursive = TRUE,
+  #                         pattern = "R2_001",
+  #                         full.names = TRUE)
   
   bytes_R1 <- readBin(file(sample_R1, 'rb'),
                         raw(),
                         n=file.info(sample_R1)$size)
+  
+  sample_R2 <- str_replace(sample_R1, "R1_001", "R2_001")
   
   bytes_R2 <- readBin(file(sample_R2, 'rb'),
                         raw(),
@@ -77,6 +84,9 @@ for (sample_name in sample_folders) {
   
   string_val1 <- serialize.to.string(bytes_R1)
   string_val2 <- serialize.to.string(bytes_R2)
+  
+  sample_name <- str_split(basename(sample_R1),
+                           "_S\\d+_L001")[[1]][[1]]
   
   output_table <- bind_rows(output_table,
                             tibble(sample = sample_name,

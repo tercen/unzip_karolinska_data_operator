@@ -3,8 +3,10 @@ library(dplyr, warn.conflicts = FALSE)
 library(base64enc)
 library(stringr)
 
-options("tercen.workflowId" = "933d7cdead59b980b3bfeb9f50029d79")
-options("tercen.stepId"     = "1ff93789-7b56-46a9-9d5e-72cae51ab52f")
+#http://127.0.0.1:5402/admin/w/2c974da864d8f73dff1e192edd00d861/ds/25141b9f-3edb-44ab-99d7-c446a2e2fba0
+
+options("tercen.workflowId" = "2c974da864d8f73dff1e192edd00d861")
+options("tercen.stepId"     = "25141b9f-3edb-44ab-99d7-c446a2e2fba0")
 
 getOption("tercen.workflowId")
 getOption("tercen.stepId")
@@ -96,6 +98,6 @@ for (sample_R1 in sample_IDs_found) {
 }
 
 output_table %>%
-  mutate(.ci = 1) %>%
+  mutate(.ci = 0) %>%
   ctx$addNamespace() %>%
   ctx$save()

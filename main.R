@@ -40,29 +40,36 @@ system(paste0("unzip ", filename))
 
 folder_name <- str_remove(filename, ".zip")
 
-sample_folders <- list.dirs(folder_name,
-                            recursive = FALSE,
-                            full.names = FALSE)
+#sample_folders <- list.dirs(folder_name,
+#                            recursive = FALSE,
+#                            full.names = FALSE)
+
+sample_IDs_found <- list.files(folder_name,
+                               pattern = "_L001_R1",
+                               recursive = TRUE,
+                               full.names = TRUE)
 
 output_table <- c()
 
-for (sample_name in sample_folders) {
+for (sample_R1 in sample_IDs_found) {
   
-  sample_R1 <- list.files(paste0(folder_name, "/",
-                                 sample_name),
-                          recursive = TRUE,
-                          pattern = "R1_001",
-                          full.names = TRUE)
-  
-  sample_R2 <- list.files(paste0(folder_name, "/",
-                                 sample_name),
-                          recursive = TRUE,
-                          pattern = "R2_001",
-                          full.names = TRUE)
+  # sample_R1 <- list.files(paste0(folder_name, "/",
+  #                                sample_name),
+  #                            recursive = TRUE,
+  #                         pattern = "R1_001",
+  #                         full.names = TRUE)
+  # 
+  # sample_R2 <- list.files(paste0(folder_name, "/",
+  #                                sample_name),
+  #                         recursive = TRUE,
+  #                         pattern = "R2_001",
+  #                         full.names = TRUE)
   
   bytes_R1 <- readBin(file(sample_R1, 'rb'),
                       raw(),
                       n=file.info(sample_R1)$size)
+  
+  sample_R2 <- str_replace(sample_R1, "R1_001", "R2_001")
   
   bytes_R2 <- readBin(file(sample_R2, 'rb'),
                       raw(),
@@ -70,6 +77,9 @@ for (sample_name in sample_folders) {
   
   string_val1 <- serialize.to.string(bytes_R1)
   string_val2 <- serialize.to.string(bytes_R2)
+  
+  sample_name <- str_split(basename(sample_R1),
+                           "_S\\d+_L001")[[1]][[1]]
   
   output_table <- bind_rows(output_table,
                             tibble(sample = sample_name,
@@ -79,6 +89,6 @@ for (sample_name in sample_folders) {
 }
 
 output_table %>%
-  mutate(.ci = 1) %>%
+  mutate(.ci = 0) %>%
   ctx$addNamespace() %>%
   ctx$save()
